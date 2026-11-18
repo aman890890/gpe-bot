@@ -1,0 +1,11 @@
+{
+  "name": "GPE Neon Cloud",
+  "version": "6.5.7",
+  "min_supported_version": "6.40",
+  "build_time": "2026-11-18T18:05:00+08:00",
+  "ea_file": "GPE Neon Cloud V6.5.6.ex5",
+  "download_url": "https://pub-23d0e09b596f4c4ba7d8df75c3e0d4eb.r2.dev/GPE-Neon-Cloud-V6.5.6.ex5",
+  "sha256": "",
+  "allow_hot_update": false,
+  "notes": "V6.5.6: LIVE UPDATE, ranking MTD+Sunday weeks, ACCOUNT HEALTH, cloud pause, idle poll 30s. Join Kelas + class analytics dashboard."
+}

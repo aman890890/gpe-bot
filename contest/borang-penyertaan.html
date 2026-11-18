@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>NFP Contest — GPE Cloud</title>
+<meta name="theme-color" content="#000000">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{max-width:100%;background:#000;min-height:100%;min-height:100dvh;color-scheme:dark}
+body{font-family:'Plus Jakarta Sans',sans-serif;color:#e2e8f0;background:transparent;min-height:100vh;min-height:100dvh;padding:24px 14px 40px;padding-top:calc(24px + env(safe-area-inset-top,0px))}
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:radial-gradient(60% 38% at 25% 30%,rgba(34,211,238,0.07),transparent 70%),radial-gradient(55% 32% at 70% 78%,rgba(245,158,11,0.06),transparent 70%),#000}
+#bgCanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.wrap{position:relative;z-index:1;width:min(460px,100%);margin:0 auto}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.brand-logo{height:36px;width:auto;display:block;filter:drop-shadow(0 0 6px rgba(251,191,36,.55)) drop-shadow(0 0 12px rgba(34,211,238,.35))}
+.logo-text{font-weight:700;font-size:11px;letter-spacing:1.2px;background:linear-gradient(90deg,#67e8f9,#c4b5fd);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.card{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,0.14),rgba(255,255,255,0.04) 42%,rgba(10,14,32,0.28));border:1px solid rgba(255,255,255,0.16);border-radius:34px;padding:16px;margin:0 0 20px;backdrop-filter:blur(28px) saturate(160%);-webkit-backdrop-filter:blur(28px) saturate(160%);box-shadow:inset 0 1px 0 rgba(255,255,255,0.28),0 20px 40px rgba(0,0,0,0.22)}
+.card::before{content:"";position:absolute;left:0;right:0;top:0;height:46%;background:linear-gradient(180deg,rgba(255,255,255,0.16),transparent);pointer-events:none}
+.card>*{position:relative;z-index:1}
+.card-title{font-size:12px;letter-spacing:.4px;color:#dbeafe;display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:8px}
+.pill{display:inline-flex;font-size:10px;font-weight:800;letter-spacing:.6px;padding:6px 10px;border-radius:999px;color:#86efac;background:rgba(34,197,94,0.16);border:1px solid rgba(34,197,94,0.35);margin:0 6px 10px 0}
+.pill.alt{color:#fde68a;background:rgba(251,191,36,0.16);border:1px solid rgba(251,191,36,0.45)}
+.note{font-size:10px;color:#94a3b8;margin-top:6px;letter-spacing:.2px;line-height:1.45}
+.label{font-size:9px;letter-spacing:1.5px;color:#94a3b8;margin:12px 0 6px;font-weight:700;text-transform:uppercase}
+.label:first-of-type{margin-top:4px}
+.input,select.input{width:100%;background:linear-gradient(180deg,rgba(255,255,255,0.08),rgba(0,0,0,0.28));border:1px solid rgba(255,255,255,0.24);border-radius:14px;padding:13px 14px;color:#f8fafc;font-size:16px;outline:none;box-shadow:inset 0 1px 0 rgba(255,255,255,0.2);font-family:'Plus Jakarta Sans',sans-serif;-webkit-appearance:none;appearance:none}
+select.input{background-image:linear-gradient(45deg,transparent 50%,#94a3b8 50%),linear-gradient(135deg,#94a3b8 50%,transparent 50%),linear-gradient(180deg,rgba(255,255,255,0.08),rgba(0,0,0,0.28));background-position:calc(100% - 18px) calc(50% - 3px),calc(100% - 12px) calc(50% - 3px),0 0;background-size:6px 6px,6px 6px,100% 100%;background-repeat:no-repeat}
+select.input option{background:#0b1220;color:#f8fafc}
+.input:focus,select.input:focus{border-color:rgba(103,232,249,0.7);box-shadow:inset 0 1px 0 rgba(255,255,255,0.2),0 0 0 3px rgba(34,211,238,0.15)}
+.check-row{display:flex;align-items:flex-start;gap:10px;margin-top:14px;font-size:11px;color:#cbd5e1;line-height:1.4}
+.check-row input{margin-top:2px;accent-color:#22d3ee}
+.btn-primary{width:100%;border:1px solid rgba(255,255,255,0.28);background:linear-gradient(180deg,rgba(255,255,255,0.42),rgba(103,232,249,0.55) 28%,rgba(139,92,246,0.72));padding:15px;border-radius:100px;font-family:'Plus Jakarta Sans';font-weight:800;font-size:12px;color:#041018;cursor:pointer;margin-top:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.55),0 10px 24px rgba(34,211,238,0.16);backdrop-filter:blur(16px)}
+.btn-ghost{background:linear-gradient(180deg,rgba(255,255,255,0.16),rgba(255,255,255,0.04));color:#e2e8f0;box-shadow:inset 0 1px 0 rgba(255,255,255,0.28)}
+.status{margin-top:12px;padding:11px;border-radius:12px;font-size:11px;text-align:center}
+.status.ok{background:rgba(34,197,94,0.16);border:1px solid rgba(34,197,94,0.35);color:#86efac}
+.status.err{background:rgba(239,68,68,0.14);border:1px solid rgba(239,68,68,0.28);color:#fca5a5}
+.tnc-list{margin-top:8px;display:grid;gap:8px}
+.tnc-item{font-size:11px;color:#cbd5e1;line-height:1.45;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);box-shadow:inset 0 1px 0 rgba(255,255,255,0.16)}
+.tnc-item b{color:#67e8f9;font-weight:700}
+.hidden{display:none!important}
+.foot{text-align:center;font-size:10px;color:#64748b}
+.foot a{color:#67e8f9;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="bg"><canvas id="bgCanvas" aria-hidden="true"></canvas></div>
+<script>
+(function () {
+  const canvas = document.getElementById("bgCanvas");
+  if (!canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext("2d");
+  const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const RIBBONS = [
+    { y0: 0.50, y1: 0.15, amp: 0.030, freq: 0.9, speed: 0.22, phase: 0.0, strands: 11, spread: 0.0075, glow: [34, 211, 238], core: [165, 243, 252], alpha: 1.0, fadeIn: 0.06, fadeOut: 0.55 },
+    { y0: 0.58, y1: 0.30, amp: 0.026, freq: 1.1, speed: 0.18, phase: 1.8, strands: 8, spread: 0.0065, glow: [14, 165, 233], core: [103, 232, 249], alpha: 0.55, fadeIn: 0.04, fadeOut: 0.35 },
+    { y0: 0.66, y1: 0.42, amp: 0.022, freq: 1.3, speed: 0.15, phase: 3.4, strands: 6, spread: 0.0060, glow: [56, 189, 248], core: [125, 211, 252], alpha: 0.32, fadeIn: 0.02, fadeOut: 0.25 },
+    { y0: 0.95, y1: 0.58, amp: 0.028, freq: 1.0, speed: 0.20, phase: 2.6, strands: 12, spread: 0.0070, glow: [245, 158, 11], core: [253, 230, 138], alpha: 0.95, fadeIn: 0.0, fadeOut: 0.6 },
+    { y0: 0.99, y1: 0.68, amp: 0.024, freq: 1.2, speed: 0.16, phase: 4.2, strands: 7, spread: 0.0060, glow: [251, 146, 60], core: [254, 215, 170], alpha: 0.45, fadeIn: 0.0, fadeOut: 0.4 }
+  ];
+  const STEPS = 56;
+  const SPARKS = [];
+  let w = 0, h = 0, dpr = 1, last = 0, rafId = 0;
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = window.innerWidth; h = window.innerHeight;
+    canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function ease(x) { const c = Math.min(1, Math.max(0, x)); return c * c * (3 - 2 * c); }
+  function ribbonY(r, x, t, offset) {
+    const base = r.y0 + (r.y1 - r.y0) * ease(x * 0.95 + 0.05);
+    const wave = r.amp * Math.sin(x * r.freq * Math.PI * 2 + t * r.speed + r.phase);
+    const breathe = 1 + 0.25 * Math.sin(t * r.speed * 0.6 + r.phase);
+    return (base + wave * breathe + offset) * h;
+  }
+  function strandOffset(r, i, x, t) {
+    const mid = (r.strands - 1) / 2;
+    const twist = 0.55 + 0.75 * Math.sin(x * 3.2 + t * r.speed * 0.8 + i * 0.35 + r.phase);
+    return (i - mid) * r.spread * twist;
+  }
+  function tracePath(r, t, i) {
+    ctx.beginPath();
+    let px = 0, py = 0;
+    for (let s = 0; s <= STEPS; s++) {
+      const x = -0.08 + (s / STEPS) * 1.16;
+      const off = i === null ? 0 : strandOffset(r, i, x, t);
+      const X = x * w, Y = ribbonY(r, x, t, off);
+      if (s === 0) ctx.moveTo(X, Y); else ctx.quadraticCurveTo(px, py, (px + X) / 2, (py + Y) / 2);
+      px = X; py = Y;
+    }
+    ctx.lineTo(px, py);
+  }
+  function ribbonGradient(rgb, a, r) {
+    const g = ctx.createLinearGradient(0, 0, w, 0);
+    const c = rgb.join(",");
+    g.addColorStop(0, "rgba(" + c + "," + (a * r.fadeIn) + ")");
+    g.addColorStop(0.18, "rgba(" + c + "," + a + ")");
+    g.addColorStop(0.6, "rgba(" + c + "," + (a * 0.85) + ")");
+    g.addColorStop(1, "rgba(" + c + "," + (a * r.fadeOut) + ")");
+    return g;
+  }
+  function drawRibbon(r, t) {
+    tracePath(r, t, null);
+    ctx.strokeStyle = ribbonGradient(r.glow, 0.05 * r.alpha, r); ctx.lineWidth = Math.max(26, h * 0.06); ctx.stroke();
+    ctx.strokeStyle = ribbonGradient(r.glow, 0.09 * r.alpha, r); ctx.lineWidth = Math.max(10, h * 0.022); ctx.stroke();
+    const mid = (r.strands - 1) / 2;
+    for (let i = 0; i < r.strands; i++) {
+      const centre = 1 - Math.abs(i - mid) / (mid + 1);
+      tracePath(r, t, i);
+      ctx.strokeStyle = ribbonGradient(centre > 0.6 ? r.core : r.glow, (0.18 + 0.5 * centre) * r.alpha, r);
+      ctx.lineWidth = 0.6 + 0.9 * centre; ctx.stroke();
+    }
+  }
+  function drawEdge(t) {
+    const x = w * 0.075;
+    const pulse = 0.75 + 0.25 * Math.sin(t * 0.5);
+    const g = ctx.createLinearGradient(0, 0, 0, h * 0.66);
+    g.addColorStop(0, "rgba(34,211,238,0)");
+    g.addColorStop(0.3, "rgba(34,211,238," + (0.9 * pulse) + ")");
+    g.addColorStop(0.75, "rgba(34,211,238," + (0.45 * pulse) + ")");
+    g.addColorStop(1, "rgba(34,211,238,0)");
+    ctx.strokeStyle = g;
+    [[30, 0.06], [12, 0.12], [4, 0.35], [1.4, 1]].forEach(([lw, a]) => {
+      ctx.globalAlpha = a; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h * 0.66); ctx.stroke();
+    });
+    ctx.globalAlpha = 1;
+  }
+  function seedSparks() {
+    SPARKS.length = 0;
+    for (let k = 0; k < 34; k++) {
+      const r = RIBBONS[k % RIBBONS.length];
+      SPARKS.push({ r, i: Math.floor(Math.random() * r.strands), u: Math.random(), v: 0.01 + Math.random() * 0.02, size: 0.6 + Math.random() * 1.1, tw: Math.random() * Math.PI * 2 });
+    }
+  }
+  function drawSparks(t, dt) {
+    for (const s of SPARKS) {
+      s.u += s.v * dt; if (s.u > 1.08) s.u = -0.08;
+      const X = s.u * w, Y = ribbonY(s.r, s.u, t, strandOffset(s.r, s.i, s.u, t));
+      const a = (0.25 + 0.55 * (0.5 + 0.5 * Math.sin(t * 1.6 + s.tw))) * s.r.alpha;
+      const rad = s.size * 3;
+      const g = ctx.createRadialGradient(X, Y, 0, X, Y, rad);
+      g.addColorStop(0, "rgba(" + s.r.core.join(",") + "," + a + ")");
+      g.addColorStop(1, "rgba(" + s.r.core.join(",") + ",0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(X, Y, rad, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  function frame(now) {
+    rafId = requestAnimationFrame(frame);
+    if (now - last < 33) return;
+    const dt = last ? Math.min(0.1, (now - last) / 1000) : 0;
+    last = now; render(now / 1000, dt);
+  }
+  function render(t, dt) {
+    ctx.globalCompositeOperation = "source-over"; ctx.clearRect(0, 0, w, h);
+    ctx.globalCompositeOperation = "lighter"; drawEdge(t); RIBBONS.forEach((r) => drawRibbon(r, t)); drawSparks(t, dt);
+    ctx.globalCompositeOperation = "source-over";
+  }
+  function start() { if (rafId || reduceMotion) return; last = 0; rafId = requestAnimationFrame(frame); }
+  function stop() { if (rafId) cancelAnimationFrame(rafId); rafId = 0; }
+  resize(); seedSparks(); render(0, 0); start();
+  window.addEventListener("resize", () => { resize(); render(performance.now() / 1000, 0); });
+  document.addEventListener("visibilitychange", () => { if (document.hidden) stop(); else start(); });
+})();
+</script>
+
+<main class="wrap">
+  <div class="brand">
+    <img class="brand-logo" src="https://gpealgo.app/gpe-logo.png" alt="GPE" onerror="this.style.display='none'">
+    <div class="logo-text">GPE CLOUD</div>
+  </div>
+
+  <section class="card">
+    <div class="card-title">NFP CONTEST</div>
+    <span class="pill">OPEN</span>
+    <span class="pill alt">6 NOVEMBER 2026</span>
+    <p class="note" id="contestNote">Register below. Your entry is sent to GPE Cloud admin.</p>
+
+    <form id="nfpForm" novalidate>
+      <div class="label">Full name</div>
+      <input id="fullName" class="input" type="text" autocomplete="name" placeholder="Full name" required>
+
+      <div class="label">Phone number</div>
+      <input id="phone" class="input" type="tel" inputmode="tel" autocomplete="tel" placeholder="e.g. 0123456789" required>
+
+      <div class="label">Email</div>
+      <input id="email" class="input" type="email" autocomplete="email" placeholder="name@email.com" required>
+
+      <div class="label">Deposit amount (USD)</div>
+      <select id="depositSelect" class="input" required>
+        <option value="">Select deposit</option>
+        <option value="300">$300 (minimum)</option>
+        <option value="500">$500</option>
+        <option value="1000">$1,000</option>
+        <option value="2000">$2,000</option>
+        <option value="3000">$3,000</option>
+        <option value="5000">$5,000</option>
+        <option value="more">More — type amount</option>
+      </select>
+      <div id="depositCustomWrap" class="hidden">
+        <div class="label">Custom deposit (min $300)</div>
+        <input id="depositCustom" class="input" type="number" inputmode="decimal" min="300" step="0.01" placeholder="e.g. 750">
+        <p class="note">Enter any amount of $300 or more.</p>
+      </div>
+
+      <div class="label">MT5 number</div>
+      <input id="mt5" class="input" type="text" inputmode="numeric" autocomplete="off" placeholder="MT5 account number" required>
+
+      <div class="label">Admin name</div>
+      <select id="adminSelect" class="input" required>
+        <option value="">Loading admins...</option>
+      </select>
+      <p class="note">Choose your admin / referral admin.</p>
+
+      <label class="check-row">
+        <input id="agreeTnc" type="checkbox" required>
+        <span>I have read and agree to the Terms &amp; Conditions below.</span>
+      </label>
+
+      <button type="submit" class="btn-primary" id="submitBtn">SUBMIT ENTRY</button>
+      <button type="button" class="btn-primary btn-ghost" id="resetBtn">RESET</button>
+      <div class="status hidden" id="status"></div>
+    </form>
+  </section>
+
+  <section class="card">
+    <div class="card-title">TERMS &amp; CONDITIONS</div>
+    <div class="tnc-list">
+      <div class="tnc-item"><b>1.</b> Minimum deposit is <b>$300</b>.</div>
+      <div class="tnc-item"><b>2.</b> Trading window: <b>8:30 PM to 12:00 AM MYT</b>.</div>
+      <div class="tnc-item"><b>3.</b> Ranking is based on the <b>highest gain %</b> relative to capital.</div>
+      <div class="tnc-item"><b>4.</b> <b>No withdrawal</b> is allowed during the contest.</div>
+      <div class="tnc-item"><b>5.</b> Participants must install and run on <b>GPE Cloud</b>.</div>
+      <div class="tnc-item"><b>6.</b> Winners will be announced within <b>7 days or more</b> after the contest.</div>
+      <div class="tnc-item"><b>7.</b> One person is eligible to win <b>one prize only</b>.</div>
+      <div class="tnc-item"><b>8.</b> This contest is <b>subject to the broker’s terms and conditions</b>.</div>
+      <div class="tnc-item"><b>9.</b> Participants agree to <b>any changes</b> made by the organizer and/or the broker.</div>
+    </div>
+  </section>
+
+  <p class="foot">Powered by <a href="https://gpealgo.app" target="_blank" rel="noopener">GPE Cloud</a></p>
+</main>
+
+<script>
+const SUPABASE_URL = "https://qevhvrqgawdzucxjjfsc.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFldmh2cnFnYXdkenVjeGpqZnNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTEzODE5ODYsImV4cCI6MjEwNjk1Nzk4Nn0.eb0kNNuQGFO5sVpddBzSSAg2hMcAxwAHFqV2cyCNyYI";
+const CONTEST_CODE = "nfp-november-2026";
+const MIN_DEPOSIT = 300;
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const form = document.getElementById("nfpForm");
+const statusEl = document.getElementById("status");
+const submitBtn = document.getElementById("submitBtn");
+const depositSelect = document.getElementById("depositSelect");
+const depositCustomWrap = document.getElementById("depositCustomWrap");
+const depositCustom = document.getElementById("depositCustom");
+const adminSelect = document.getElementById("adminSelect");
+let contestId = null;
+
+function showStatus(msg, ok) {
+  statusEl.textContent = msg;
+  statusEl.classList.remove("hidden", "ok", "err");
+  statusEl.classList.add(ok ? "ok" : "err");
+}
+
+function syncDepositUi() {
+  const more = depositSelect.value === "more";
+  depositCustomWrap.classList.toggle("hidden", !more);
+  depositCustom.required = more;
+  if (!more) depositCustom.value = "";
+}
+
+function getDepositAmount() {
+  if (depositSelect.value === "more") return Number(depositCustom.value);
+  return Number(depositSelect.value);
+}
+
+async function loadAdmins() {
+  adminSelect.innerHTML = '<option value="">Select admin</option>';
+  const { data, error } = await db.rpc("list_admin_nicknames");
+  if (error || !data || !data.length) {
+    adminSelect.innerHTML = '<option value="">No admin list</option>';
+    return;
+  }
+  const seen = {};
+  data.forEach((row) => {
+    const nick = String((row && row.nickname) || row || "").trim();
+    if (!nick) return;
+    const key = nick.toLowerCase();
+    if (seen[key]) return;
+    seen[key] = true;
+    const opt = document.createElement("option");
+    opt.value = nick;
+    opt.textContent = nick;
+    adminSelect.appendChild(opt);
+  });
+}
+
+async function loadContest() {
+  const { data, error } = await db.from("contests").select("id,title,event_date,is_open").eq("code", CONTEST_CODE).maybeSingle();
+  if (error || !data) {
+    document.getElementById("contestNote").textContent = "Contest is not ready yet. Admin must run the contest SQL first.";
+    submitBtn.disabled = true;
+    return;
+  }
+  contestId = data.id;
+  if (!data.is_open) {
+    showStatus("This contest is closed.", false);
+    submitBtn.disabled = true;
+  }
+}
+
+depositSelect.addEventListener("change", syncDepositUi);
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!contestId) return showStatus("Contest not found.", false);
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return showStatus("Please complete all required fields.", false);
+  }
+  if (!document.getElementById("agreeTnc").checked) {
+    return showStatus("Please agree to the Terms & Conditions.", false);
+  }
+
+  const deposit = getDepositAmount();
+  if (!Number.isFinite(deposit) || deposit < MIN_DEPOSIT) {
+    return showStatus("Minimum deposit is $300.", false);
+  }
+
+  const mt5 = String(document.getElementById("mt5").value || "").trim();
+  if (!/^\d{4,}$/.test(mt5)) {
+    return showStatus("Enter a valid MT5 number.", false);
+  }
+
+  const admin = String(adminSelect.value || "").trim();
+  if (!admin) return showStatus("Please select an admin.", false);
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "SUBMITTING...";
+
+  const payload = {
+    contest_id: contestId,
+    full_name: document.getElementById("fullName").value.trim(),
+    phone: document.getElementById("phone").value.trim(),
+    email: document.getElementById("email").value.trim().toLowerCase(),
+    deposit_amount: deposit,
+    mt5_number: mt5,
+    mtfy_number: mt5,
+    admin_nickname: admin
+  };
+
+  const { error } = await db.from("contest_entries").insert(payload);
+  submitBtn.disabled = false;
+  submitBtn.textContent = "SUBMIT ENTRY";
+
+  if (error) {
+    const dup = /duplicate|unique/i.test(error.message || "");
+    return showStatus(dup ? "This MT5 number is already registered for this contest." : ("Failed: " + error.message), false);
+  }
+
+  showStatus("Entry submitted. Admin can view it in GPE Cloud.", true);
+  form.reset();
+  syncDepositUi();
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  form.reset();
+  syncDepositUi();
+  statusEl.classList.add("hidden");
+});
+
+Promise.all([loadContest(), loadAdmins()]);
+</script>
+</body>
+</html>

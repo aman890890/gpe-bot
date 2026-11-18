@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GPE Neon Cloud — User Guide V6.5.6</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root { color-scheme: dark; --cyan:#67e8f9; --gold:#fde68a; --green:#86efac; --pink:#fca5a5; --muted:#94a3b8; --card:rgba(255,255,255,.06); --line:rgba(255,255,255,.14); }
+  *{box-sizing:border-box}
+  body{margin:0;background:#000;color:#e2e8f0;font-family:'Plus Jakarta Sans',sans-serif;line-height:1.55;background-image:radial-gradient(50% 30% at 20% 0%,rgba(34,211,238,.08),transparent),radial-gradient(40% 25% at 90% 10%,rgba(245,158,11,.06),transparent)}
+  .wrap{max-width:860px;margin:0 auto;padding:28px 16px 80px}
+  img.logo{width:76px;height:76px;border-radius:18px;display:block;margin:0 auto 10px;filter:drop-shadow(0 0 12px rgba(34,211,238,.35))}
+  h1{text-align:center;font-size:26px;color:var(--cyan);margin:8px 0 4px;font-weight:800}
+  .sub{text-align:center;color:var(--muted);margin:0 0 18px;font-size:13px}
+  .toc{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0 28px}
+  .toc a{display:block;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:#e2e8f0;text-decoration:none;font-size:12px;font-weight:700}
+  .toc a span{display:block;color:var(--cyan);font-size:10px;letter-spacing:.6px;margin-bottom:2px}
+  h2{font-size:17px;color:var(--cyan);margin:34px 0 10px;border-top:1px solid var(--line);padding-top:22px;font-weight:800}
+  h3{font-size:14px;color:#f8fafc;margin:16px 0 8px;font-weight:700}
+  p,li{font-size:14px;color:#cbd5e1}
+  ol,ul{padding-left:20px;margin:8px 0}
+  b,strong{color:#f8fafc}
+  a{color:var(--cyan)}
+  .box{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin:12px 0;box-shadow:inset 0 1px 0 rgba(255,255,255,.2)}
+  .warn{border-color:rgba(251,191,36,.35);color:var(--gold)}
+  .ok{border-color:rgba(34,197,94,.35);color:var(--green)}
+  .bad{border-color:rgba(248,113,113,.35);color:var(--pink)}
+  .tip{border-color:rgba(103,232,249,.35)}
+  .steps{display:grid;gap:10px;margin:12px 0}
+  .step{display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:start;padding:12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+  .num{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#041018;background:linear-gradient(180deg,#a5f3fc,#22d3ee);font-size:15px}
+  .step h4{margin:0 0 4px;font-size:13px;color:#f8fafc}
+  .step p{margin:0;font-size:13px}
+  .visual{margin:14px 0;padding:16px;border-radius:18px;border:1px dashed rgba(103,232,249,.35);background:rgba(8,47,73,.35);text-align:center}
+  .visual svg{max-width:100%;height:auto}
+  .visual .cap{margin-top:8px;font-size:11px;color:var(--muted)}
+  .pills{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;font-size:11px;font-weight:800;border:1px solid var(--line)}
+  .pill.live{color:var(--green);background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.4)}
+  .pill.off{color:var(--muted);background:rgba(148,163,184,.12)}
+  .pill.on{color:var(--green);background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.4)}
+  .pill.wait{color:var(--gold);background:rgba(251,191,36,.14);border-color:rgba(251,191,36,.4)}
+  .pill.bad{color:var(--pink);background:rgba(239,68,68,.12);border-color:rgba(248,113,113,.35)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .mini{padding:12px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+  .mini h4{margin:0 0 6px;font-size:12px;color:var(--cyan)}
+  .code{font-family:ui-monospace,Consolas,monospace;font-size:12px;word-break:break-all;background:rgba(0,0,0,.35);padding:10px 12px;border-radius:10px;border:1px solid var(--line);color:#a5f3fc}
+  .print{display:block;width:100%;max-width:280px;margin:0 auto 18px;padding:12px 16px;border:0;border-radius:999px;background:linear-gradient(180deg,#a5f3fc,#22d3ee);color:#041018;font-weight:800;cursor:pointer;font-family:inherit}
+  .footer{text-align:center;margin-top:40px;color:var(--muted);font-size:13px}
+  @media (max-width:640px){.toc,.grid2{grid-template-columns:1fr}}
+  @media print{
+    body{background:#fff;color:#111}
+    h1,h2,a,.mini h4{color:#0e7490}
+    .print,.noprint{display:none!important}
+    .box,.step,.mini,.visual{border-color:#ccc;background:#f8fafc}
+    .toc a{color:#111;background:#fff}
+    p,li{color:#333}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <img class="logo" src="gpe-logo.png" alt="GPE">
+  <h1>GPE Neon Cloud User Guide</h1>
+  <p class="sub">Website: <a href="https://gpealgo.app">https://gpealgo.app</a> · Robot / Web <b>V6.5.6</b></p>
+  <button class="print noprint" onclick="window.print()">Print / Save as PDF</button>
+
+  <div class="box warn"><b>Risk warning.</b> Trading is high risk. You can lose money. Neon Cloud does not guarantee profit. Use only money you can afford to lose.</div>
+
+  <div class="toc noprint">
+    <a href="#start"><span>01</span>Register &amp; login</a>
+    <a href="#mt5"><span>02</span>Download MT5 + WebRequest</a>
+    <a href="#license"><span>03</span>Submit MT5 license</a>
+    <a href="#dash"><span>04</span>Dashboard &amp; LIVE UPDATE</a>
+    <a href="#trade"><span>05</span>Slots, START, close</a>
+    <a href="#cloud"><span>06</span>Cloud chip / pause</a>
+    <a href="#preset"><span>07</span>Presets &amp; ranking</a>
+    <a href="#update"><span>08</span>Update robot V6.5.6</a>
+    <a href="#admin"><span>09</span>Admin tools</a>
+  </div>
+
+  <h2 id="start">1. Create an account</h2>
+  <div class="steps">
+    <div class="step"><div class="num">1</div><div><h4>Open the website</h4><p>Go to <a href="https://gpealgo.app">https://gpealgo.app</a> on phone or computer (HTTPS only).</p></div></div>
+    <div class="step"><div class="num">2</div><div><h4>Register</h4><p>Email, password, phone, and your <b>admin name</b>. Tick the risk checkbox → <b>CREATE ACCOUNT</b>.</p></div></div>
+    <div class="step"><div class="num">3</div><div><h4>Login</h4><p>Open welcome email if it arrives, then login. Trading stays locked until admin approves your MT5.</p></div></div>
+    <div class="step"><div class="num">4</div><div><h4>Install as app (PWA)</h4><p>Android Chrome: menu → Add to Home screen. iPhone Safari: Share → Add to Home Screen.</p></div></div>
+  </div>
+  <div class="box tip"><b>Forgot password:</b> Login page → Forgot password → email link → set new password (returns to gpealgo.app).</div>
+
+  <h2 id="mt5">2. Download MT5 portable (VPS)</h2>
+  <div class="visual">
+    <svg viewBox="0 0 520 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MT5 install flow">
+      <rect x="10" y="40" width="110" height="70" rx="14" fill="#0f172a" stroke="#67e8f9"/>
+      <text x="65" y="80" text-anchor="middle" fill="#67e8f9" font-size="12" font-family="Plus Jakarta Sans,sans-serif" font-weight="700">Website</text>
+      <path d="M130 75 H170" stroke="#94a3b8" stroke-width="2"/>
+      <polygon points="170,70 182,75 170,80" fill="#94a3b8"/>
+      <rect x="190" y="40" width="110" height="70" rx="14" fill="#0f172a" stroke="#fde68a"/>
+      <text x="245" y="72" text-anchor="middle" fill="#fde68a" font-size="11" font-family="Plus Jakarta Sans,sans-serif" font-weight="700">Download ZIP</text>
+      <text x="245" y="90" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="Plus Jakarta Sans,sans-serif">Extract on VPS</text>
+      <path d="M310 75 H350" stroke="#94a3b8" stroke-width="2"/>
+      <polygon points="350,70 362,75 350,80" fill="#94a3b8"/>
+      <rect x="370" y="40" width="140" height="70" rx="14" fill="#0f172a" stroke="#86efac"/>
+      <text x="440" y="72" text-anchor="middle" fill="#86efac" font-size="11" font-family="Plus Jakarta Sans,sans-serif" font-weight="700">Start_MT5_GPE.bat</text>
+      <text x="440" y="90" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="Plus Jakarta Sans,sans-serif">Attach EA on chart</text>
+    </svg>
+    <div class="cap">Figure A — Download → extract → run bat → attach robot</div>
+  </div>
+  <ol>
+    <li>Settings → <b>Download MT5</b> → Download MT5 portable.</li>
+    <li>Extract the zip on the VPS. Run <b>Start_MT5_GPE.bat</b> (do not open terminal64.exe alone).</li>
+    <li>MT5 → Tools → Options → Expert Advisors:</li>
+  </ol>
+  <div class="box">
+    <ul>
+      <li>Tick <b>Allow DLL imports</b></li>
+      <li>Tick <b>Allow WebRequest for listed URL</b></li>
+      <li>Add exactly:</li>
+    </ul>
+    <div class="code">https://qevhvrqgawdzucxjjfsc.supabase.co</div>
+  </div>
+  <ol start="4">
+    <li>Login broker account. Attach <b>GPE Neon Cloud V6.5.6</b> on a chart. AutoTrading ON.</li>
+    <li>Submit the MT5 number in the website (next section).</li>
+  </ol>
+
+  <h2 id="license">3. Submit your MT5 license</h2>
+  <div class="steps">
+    <div class="step"><div class="num">1</div><div><h4>Settings → Licensing</h4><p>Type MT5 account number. Choose broker (Ultima Markets, FXGT, Headway, Oroku).</p></div></div>
+    <div class="step"><div class="num">2</div><div><h4>Submit once</h4><p>If already sent: <b>Already submitted, waiting approval.</b> Do not spam — admin only needs one pending row.</p></div></div>
+    <div class="step"><div class="num">3</div><div><h4>Serial</h4><p>A GPE serial is created at once. Keep it with the MT5 number.</p></div></div>
+    <div class="step"><div class="num">4</div><div><h4>Wait for Approve</h4><p>Admin Approves. Robot claims cloud token by itself. Chip shows CONNECTING → CONNECTED.</p></div></div>
+  </div>
+  <div class="grid2">
+    <div class="mini"><h4>Plan size</h4><p>Default <b>2 MT5</b> (BASIC). Unlock custom presets → PRO badge. Need more? Settings → <b>Request Premium</b> (one slot per approval).</p></div>
+    <div class="mini"><h4>Delete MT5</h4><p>Settings → pick MT5 → red DELETE. Instant, no admin request. Use when you no longer need that account.</p></div>
+  </div>
+
+  <h2 id="dash">4. Dashboard — MY CLOUD ACCOUNT</h2>
+  <div class="visual">
+    <div class="pills">
+      <span class="pill live">LIVE UPDATE</span>
+      <span class="pill on">CONNECTED</span>
+      <span class="pill off">NOT LIVE</span>
+      <span class="pill bad">OFFLINE</span>
+    </div>
+    <svg viewBox="0 0 520 120" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Live update header">
+      <rect x="20" y="28" width="480" height="64" rx="18" fill="#0f172a" stroke="rgba(255,255,255,.2)"/>
+      <text x="40" y="66" fill="#67e8f9" font-size="13" font-family="Plus Jakarta Sans,sans-serif" font-weight="800">MY CLOUD ACCOUNT</text>
+      <circle cx="300" cy="60" r="14" fill="rgba(34,197,94,.2)" stroke="#86efac"/>
+      <path d="M300 52 a8 8 0 1 1 -5 14" fill="none" stroke="#86efac" stroke-width="2"/>
+      <path d="M295 52 h6 v6" fill="none" stroke="#86efac" stroke-width="2"/>
+      <rect x="325" y="46" width="92" height="28" rx="14" fill="rgba(34,197,94,.16)" stroke="#86efac"/>
+      <text x="371" y="65" text-anchor="middle" fill="#86efac" font-size="9" font-family="Plus Jakarta Sans,sans-serif" font-weight="800">LIVE UPDATE</text>
+      <rect x="428" y="46" width="58" height="28" rx="14" fill="rgba(34,197,94,.16)" stroke="#86efac"/>
+      <text x="457" y="65" text-anchor="middle" fill="#86efac" font-size="9" font-family="Plus Jakarta Sans,sans-serif" font-weight="800">ONLINE</text>
+    </svg>
+    <div class="cap">Figure B — Refresh (reset 5:00) · LIVE UPDATE (green) · Online/Offline pill</div>
+  </div>
+  <ul>
+    <li><b>LIVE UPDATE</b> (green) = dashboard polls every ~2s. Auto returns to <b>NOT LIVE</b> after <b>5:00</b>.</li>
+    <li>Note shows <b>LIVE UPDATE · remaining X:XX min.</b> Round refresh button resets the 5 minutes.</li>
+    <li><b>NOT LIVE</b> (grey) = slow poll (~30s). Saves traffic. Tap LIVE when you need fast START confirm.</li>
+    <li>Tapping <b>START</b> auto-turns LIVE UPDATE on and resets the timer.</li>
+    <li>Select ACCOUNT 1 / 2 at the top. Instruments are saved per MT5.</li>
+  </ul>
+
+  <h2 id="trade">5. Trade slots, START, close</h2>
+  <h3>Instruments (max 3)</h3>
+  <p>Trades tab → save symbols using <b>exact broker names</b> (example <code>XAUUSD.pc</code>, <code>VOL_80</code>). Mismatch names cause “Robot did not confirm START”.</p>
+  <div class="visual">
+    <svg viewBox="0 0 520 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="START confirm flow">
+      <rect x="16" y="40" width="120" height="60" rx="14" fill="#0f172a" stroke="#67e8f9"/>
+      <text x="76" y="75" text-anchor="middle" fill="#67e8f9" font-size="12" font-family="Plus Jakarta Sans,sans-serif" font-weight="700">Tap START</text>
+      <path d="M146 70 H186" stroke="#94a3b8" stroke-width="2"/><polygon points="186,65 198,70 186,75" fill="#94a3b8"/>
+      <rect x="206" y="40" width="130" height="60" rx="14" fill="#0f172a" stroke="#fde68a"/>
+      <text x="271" y="68" text-anchor="middle" fill="#fde68a" font-size="11" font-family="Plus Jakarta Sans,sans-serif" font-weight="700">Waiting…</text>
+      <text x="271" y="84" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="Plus Jakarta Sans,sans-serif">up to 20s</text>
+      <path d="M346 70 H386" stroke="#94a3b8" stroke-width="2"/><polygon points="386,65 398,70 386,75" fill="#94a3b8"/>
+      <rect x="406" y="40" width="98" height="60" rx="14" fill="#0f172a" stroke="#86efac"/>
+      <text x="455" y="75" text-anchor="middle" fill="#86efac" font-size="12" font-family="Plus Jakarta Sans,sans-serif" font-weight="700">ON / OFF</text>
+    </svg>
+    <div class="cap">Figure C — Website waits for robot confirm (live last_seen + slot on)</div>
+  </div>
+  <ul>
+    <li>START / HOLD show orange <b>Waiting</b> until robot confirms.</li>
+    <li>If timeout: check LIVE UPDATE, robot CONNECTED, and symbol name match. Tap again.</li>
+    <li>Close buttons = <b>selected instrument only</b>, same magic (Profit/Loss Buy/Sell, Close All that symbol).</li>
+  </ul>
+
+  <h2 id="cloud">6. Cloud chip on MT5 (robot panel)</h2>
+  <div class="pills">
+    <span class="pill wait">CLOUD CONNECTING</span>
+    <span class="pill on">CLOUD CONNECTED</span>
+    <span class="pill off">CLOUD PAUSED</span>
+  </div>
+  <div class="grid2">
+    <div class="mini">
+      <h4>What each state means</h4>
+      <ul>
+        <li><b>CONNECTING</b> — trying to sync Supabase</li>
+        <li><b>CONNECTED</b> — heartbeat OK</li>
+        <li><b>PAUSED</b> — EA stopped <code>ea_sync</code> (saves bill)</li>
+      </ul>
+    </div>
+    <div class="mini">
+      <h4>How to pause / resume</h4>
+      <ul>
+        <li>Tap the cloud chip on the chart</li>
+        <li>Admin: Search MT5 → <b>PAUSE CLOUD</b></li>
+        <li>Auto: <b>3 days</b> with no open positions → pause</li>
+      </ul>
+    </div>
+  </div>
+  <div class="box tip"><b>Note:</b> Website LIVE UPDATE ≠ robot cloud chip. LIVE UPDATE only speeds the phone dashboard. PAUSED robot will look Offline on the site until resumed.</div>
+
+  <h2 id="preset">7. Presets, History, Ranking</h2>
+  <h3>Presets</h3>
+  <ul>
+    <li>Asia / Scalping / SLTP / News packs are free. After picking a pack, press <b>SEND TO ROBOT</b>.</li>
+    <li>Custom cards stay locked until admin unlocks (Settings → Request unlock). One approval unlocks the email for life.</li>
+    <li>If save fails with RLS / presets error: ask admin — usually stale ownership; do not spam SEND.</li>
+  </ul>
+  <h3>History</h3>
+  <ul>
+    <li>News calendar = Malaysia time. Check high-impact news before trading.</li>
+    <li>YOUR RESULTS / DAILY PROFIT CHART / PRESET SEND LOG can be minimized.</li>
+  </ul>
+  <h3>GPE Ranking (V6.5.6)</h3>
+  <div class="visual">
+    <svg viewBox="0 0 520 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Weekly ranking cards">
+      <rect x="20" y="16" width="200" height="60" rx="14" fill="#0f172a" stroke="#67e8f9"/>
+      <text x="120" y="42" text-anchor="middle" fill="#67e8f9" font-size="12" font-family="Plus Jakarta Sans,sans-serif" font-weight="800">THIS WEEK Top 5</text>
+      <text x="120" y="58" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="Plus Jakarta Sans,sans-serif">resets every Monday</text>
+      <rect x="240" y="16" width="120" height="60" rx="14" fill="#0f172a" stroke="rgba(255,255,255,.25)"/>
+      <text x="300" y="50" text-anchor="middle" fill="#e2e8f0" font-size="11" font-family="Plus Jakarta Sans,sans-serif" font-weight="700">Week 1–4</text>
+      <rect x="380" y="16" width="120" height="60" rx="14" fill="#0f172a" stroke="#fde68a"/>
+      <text x="440" y="50" text-anchor="middle" fill="#fde68a" font-size="11" font-family="Plus Jakarta Sans,sans-serif" font-weight="700">Monthly Top 3</text>
+      <rect x="20" y="96" width="480" height="52" rx="14" fill="#0f172a" stroke="rgba(255,255,255,.18)"/>
+      <text x="260" y="127" text-anchor="middle" fill="#94a3b8" font-size="11" font-family="Plus Jakarta Sans,sans-serif">Join Ranking in YOUR RESULTS · nickname only, not email</text>
+    </svg>
+    <div class="cap">Figure D — Weekly board + Week 1–4 history + Monthly Top 3</div>
+  </div>
+  <p>Settings → nickname first. Weeks are Mon–Sun overlapping the calendar month (Week 3 can be the current week mid-month).</p>
+
+  <h2 id="update">8. Update robot to V6.5.6</h2>
+  <div class="box tip"><b>Short path:</b> Flat account → Settings → <b>UPDATE ROBOT</b> → wait for MT5 restart → attach <b>GPE Neon Cloud V6.5.6</b> → confirm version 6.5.6 on the website.</div>
+
+  <h3>Before you tap Update</h3>
+  <ol>
+    <li>Login at <a href="https://gpealgo.app">https://gpealgo.app</a>.</li>
+    <li>MT5 must be <b>approved</b> and the robot <b>LIVE</b> / CONNECTED.</li>
+    <li><b>Close all positions</b> on that account. Update is blocked while trades are open.</li>
+    <li>On the VPS: AutoTrading ON and <b>Allow DLL imports</b> ON (needed for the updater).</li>
+  </ol>
+
+  <h3>A — Update from the website (recommended)</h3>
+  <div class="steps">
+    <div class="step"><div class="num">1</div><div><h4>Open Settings</h4><p>Find the <b>Robot Update</b> card.</p></div></div>
+    <div class="step"><div class="num">2</div><div><h4>Read both lines</h4><p>Top line = cloud robot + website version (should be <b>6.5.6</b>). Bottom line = robot on your VPS.</p></div></div>
+    <div class="step"><div class="num">3</div><div><h4>Check, then Update</h4><p>Tap <b>Check for update</b> if shown, then tap <b>UPDATE ROBOT</b>.</p></div></div>
+    <div class="step"><div class="num">4</div><div><h4>Wait on the VPS</h4><p>The VPS downloads <b>one</b> EX5 only (<code>GPE Neon Cloud V6.5.6.ex5</code>), restarts MT5 portable, and removes old GPE Neon Cloud EX5 names.</p></div></div>
+    <div class="step"><div class="num">5</div><div><h4>Re-attach</h4><p>In Navigator → Experts, attach <b>GPE Neon Cloud V6.5.6</b> on the chart. Confirm the Settings card shows Robot <b>6.5.6</b>.</p></div></div>
+  </div>
+  <div class="visual">
+    <svg viewBox="0 0 520 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Update robot flow">
+      <rect x="12" y="30" width="100" height="60" rx="14" fill="#0f172a" stroke="#67e8f9"/>
+      <text x="62" y="65" text-anchor="middle" fill="#67e8f9" font-size="11" font-family="Plus Jakarta Sans,sans-serif" font-weight="700">Website</text>
+      <path d="M120 60 H150" stroke="#94a3b8" stroke-width="2"/><polygon points="150,55 162,60 150,65" fill="#94a3b8"/>
+      <rect x="170" y="30" width="110" height="60" rx="14" fill="#0f172a" stroke="#fde68a"/>
+      <text x="225" y="58" text-anchor="middle" fill="#fde68a" font-size="10" font-family="Plus Jakarta Sans,sans-serif" font-weight="700">UPDATE ROBOT</text>
+      <text x="225" y="74" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="Plus Jakarta Sans,sans-serif">flat account</text>
+      <path d="M288 60 H318" stroke="#94a3b8" stroke-width="2"/><polygon points="318,55 330,60 318,65" fill="#94a3b8"/>
+      <rect x="338" y="30" width="170" height="60" rx="14" fill="#0f172a" stroke="#86efac"/>
+      <text x="423" y="58" text-anchor="middle" fill="#86efac" font-size="10" font-family="Plus Jakarta Sans,sans-serif" font-weight="700">VPS → one EX5</text>
+      <text x="423" y="74" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="Plus Jakarta Sans,sans-serif">attach V6.5.6</text>
+    </svg>
+    <div class="cap">Figure E — Flat → UPDATE ROBOT → VPS installs one file → attach V6.5.6</div>
+  </div>
+
+  <h3>B — Manual update on the VPS</h3>
+  <p>Use this only if the website button does nothing.</p>
+  <ol>
+    <li>Make sure the account is <b>flat</b>, then close MT5.</li>
+    <li>Open PowerShell in the portable <b>MQL5\Experts</b> folder and run:</li>
+  </ol>
+  <div class="code">powershell -ExecutionPolicy Bypass -File .\GPE_Update.ps1 -Force</div>
+  <ol start="3">
+    <li>Check <code>MQL5\Files\gpe-update.log</code>.</li>
+    <li>Start again with <b>Start_MT5_GPE.bat</b>, then attach <b>GPE Neon Cloud V6.5.6</b>.</li>
+  </ol>
+
+  <h3>C — Fresh VPS install</h3>
+  <ol>
+    <li>Settings → <b>Download MT5 portable</b> (zip V6.5.6).</li>
+    <li>Extract on the VPS → run <b>Start_MT5_GPE.bat</b>.</li>
+    <li>Login broker → attach <b>GPE Neon Cloud V6.5.6</b> → submit the MT5 number if needed.</li>
+  </ol>
+
+  <h3>How to confirm success</h3>
+  <div class="grid2">
+    <div class="mini"><h4>Robot panel</h4><p>Header / footer shows <b>V6.5.6</b>.</p></div>
+    <div class="mini"><h4>Website Settings</h4><p>Bottom line: Robot <b>6.5.6</b> on the VPS.</p></div>
+    <div class="mini"><h4>Navigator</h4><p>One main file: <b>GPE Neon Cloud V6.5.6</b> (not many old V6.3–V6.5.5 copies).</p></div>
+    <div class="mini"><h4>Cloud chip</h4><p>Returns to <b>CONNECTED</b> after restart (unless paused).</p></div>
+  </div>
+
+  <h3>If update fails</h3>
+  <div class="grid2">
+    <div class="mini"><h4>Update blocked</h4><p>Close all positions first, then tap UPDATE ROBOT again.</p></div>
+    <div class="mini"><h4>Version unchanged</h4><p>Already on 6.5.6, or flag did not reach VPS. Try manual <code>-Force</code>.</p></div>
+    <div class="mini"><h4>MT5 will not reopen</h4><p>Delete <code>MQL5\Files\GPE_UPDATE_NOW.txt</code> if it remains. End leftover <code>terminal64</code> / PowerShell, then run <b>Start_MT5_GPE.bat</b>.</p></div>
+    <div class="mini"><h4>Empty chart after update</h4><p>Re-attach <b>GPE Neon Cloud V6.5.6</b>. The updater keeps one EX5 name only.</p></div>
+  </div>
+
+  <h3>Phone notifications</h3>
+  <ul>
+    <li>Settings → Enable phone notifications. Keep the PWA on the Home Screen for alerts when the browser is closed.</li>
+    <li>You do <b>not</b> compile on the VPS. The website / updater replaces the EX5 for you.</li>
+  </ul>
+
+  <h2 id="admin">9. Admin (staff only)</h2>
+  <div class="steps">
+    <div class="step"><div class="num">A</div><div><h4>Pending list</h4><p>Your clients only. Approve / Reject / Renew. Search can find any MT5 / serial / email.</p></div></div>
+    <div class="step"><div class="num">B</div><div><h4>After Search MT5</h4><p>Buttons: APPROVE, RENEW, REJECT, LOCK/UNLOCK presets, <b>PAUSE CLOUD</b>, DELETE.</p></div></div>
+    <div class="step"><div class="num">C</div><div><h4>PAUSE CLOUD</h4><p>Forces robot to stop Supabase sync (needs V6.5.6 + SQL cloud-pause). Use for empty / idle VPS accounts.</p></div></div>
+    <div class="step"><div class="num">D</div><div><h4>Requests</h4><p>Premium slot, change admin, unlock presets. Client cannot spam the same pending request.</p></div></div>
+  </div>
+  <div class="box bad"><b>Delete MT5</b> removes license — robot may still ping once or twice until token clears. Prefer <b>PAUSE CLOUD</b> first for empty accounts that still spam logs.</div>
+
+  <h2>10. Quick troubleshooting</h2>
+  <div class="grid2">
+    <div class="mini"><h4>Robot did not confirm START</h4><p>Turn LIVE UPDATE on. Chip CONNECTED. Symbol name exact. Wait &lt;20s. Check Experts for symbol_on / gpe_on.</p></div>
+    <div class="mini"><h4>Instrument became another pair</h4><p>Check ACCOUNT 1/2. Do not edit same MT5 on two phones. Re-save instruments on the correct account.</p></div>
+    <div class="mini"><h4>Margin calc error spam</h4><p>Usually empty balance / bad symbol with START ON. START OFF or Pause cloud. V6.5.6 logs at most once per minute.</p></div>
+    <div class="mini"><h4>Presets RLS error</h4><p>Ask admin to fix ownership or delete stale presets row for that MT5, then SEND again.</p></div>
+    <div class="mini"><h4>UPDATE ROBOT stuck</h4><p>Account flat? Robot LIVE? Then try VPS manual <code>GPE_Update.ps1 -Force</code>. See section 8.</p></div>
+    <div class="mini"><h4>Many old EX5 names</h4><p>After a successful V6.5.6 update only one file should remain. Attach V6.5.6 and remove leftover names if needed.</p></div>
+  </div>
+
+  <p class="footer">GPE Neon Cloud V6.5.6 · Sincerely, from GPE<br>
+  <a href="https://gpealgo.app">https://gpealgo.app</a></p>
+</div>
+</body>
+</html>

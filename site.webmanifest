@@ -1,0 +1,12 @@
+{
+  "name": "GPE Neon Cloud",
+  "short_name": "GPE Cloud",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#00000000",
+  "icons": [
+    { "src": "gpe-logo.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "gpe-logo.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
